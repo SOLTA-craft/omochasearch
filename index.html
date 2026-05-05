@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="おもちゃサーチ — ナーフ・ベイブレード・たまごっちなど人気おもちゃをシリーズ・価格・難易度で絞り込み。Amazonですぐ購入できるまとめサイト。">
+  <title>おもちゃサーチ | ナーフ・おもちゃを探して比べてすぐ買える</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #e8380d;
+      --primary-light: #ff6b47;
+      --accent: #ffc107;
+      --bg: #f8f8f8;
+      --card-bg: #ffffff;
+      --text: #1a1a1a;
+      --text-sub: #666;
+      --border: #e0e0e0;
+      --amazon: #ff9900;
+      --amazon-dark: #e68a00;
+      --radius: 10px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .logo-icon { font-size: 22px; }
+    .logo-sub { font-size: 11px; font-weight: 400; opacity: 0.85; margin-top: 2px; }
+    .header-nav { display: flex; gap: 16px; font-size: 13px; }
+    .header-nav a { color: rgba(255,255,255,0.9); text-decoration: none; }
+    .header-nav a:hover { color: white; }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: white;
+      text-align: center;
+      padding: 40px 16px 36px;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: var(--accent);
+      color: #333;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .hero h1 { font-size: 26px; font-weight: 900; margin-bottom: 8px; line-height: 1.3; }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 13px; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto; }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 20px;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 22px; font-weight: 900; color: var(--accent); }
+    .stat-label { font-size: 11px; color: rgba(255,255,255,0.65); }
+
+    /* ===== CATEGORY TABS ===== */
+    .category-bar {
+      background: white;
+      border-bottom: 2px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .category-bar::-webkit-scrollbar { display: none; }
+    .category-tabs {
+      display: flex;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    .cat-tab {
+      flex-shrink: 0;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-sub);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .cat-tab:hover { color: var(--primary); }
+    .cat-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* ===== FILTER PANEL ===== */
+    .filter-section {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+    .filter-inner { max-width: 1100px; margin: 0 auto; }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .filter-row:last-child { margin-bottom: 0; }
+    .filter-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-sub);
+      min-width: 56px;
+    }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: white;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+    .chip.active { background: var(--primary); border-color: var(--primary); color: white; font-weight: 700; }
+    .filter-reset {
+      font-size: 12px;
+      color: var(--text-sub);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: white;
+      margin-left: auto;
+    }
+    .filter-reset:hover { background: #f0f0f0; }
+
+    /* ===== RESULT INFO ===== */
+    .result-bar {
+      max-width: 1100px;
+      margin: 14px auto 0;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .result-count { font-size: 13px; color: var(--text-sub); }
+    .result-count strong { color: var(--primary); font-weight: 700; }
+
+    /* ===== PRODUCT GRID ===== */
+    .grid-section { max-width: 1100px; margin: 12px auto 40px; padding: 0 16px; }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 14px;
+    }
+
+    /* ===== PRODUCT CARD ===== */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+    .card.hidden { display: none; }
+
+    .card-img {
+      background: #f0f0f0;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      position: relative;
+    }
+    .card-badges {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1.4;
+    }
+    .badge-series { background: #1565c0; color: white; }
+    .badge-new { background: var(--primary); color: white; }
+    .badge-age { background: #388e3c; color: white; }
+
+    .card-body { padding: 10px 12px; flex: 1; display: flex; flex-direction: column; }
+    .card-name { font-size: 13px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+
+    .card-specs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .spec-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .spec {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+    .spec-icon { font-size: 12px; }
+    .spec-val { font-weight: 600; color: var(--text); }
+
+    .card-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 10px; }
+    .tag {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: #f0f0f0;
+      color: #555;
+    }
+    .tag-beginner { background: #e8f5e9; color: #2e7d32; }
+    .tag-advanced { background: #fce4ec; color: #c62828; }
+    .tag-mid { background: #fff3e0; color: #e65100; }
+
+    .card-price {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .card-price span { font-size: 11px; font-weight: 400; color: var(--text-sub); }
+
+    .btn-amazon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--amazon);
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 9px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.15s;
+      margin-top: auto;
+    }
+    .btn-amazon:hover { background: var(--amazon-dark); }
+    .btn-amazon::before { content: ''; display: inline-block; width: 16px; height: 16px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M20.4 14.4c-.3.2-1.6 1.2-3.1.8s-1.7-1.3-1.7-1.3c-1.3.9-2.6 1.3-3.7 1.3-1.5 0-2.9-1-2.9-2.9 0-2.4 2.1-3.6 5.5-3.6H16v-.4c0-1.5-1.3-2-2.6-2-1 0-2.3.4-3.1.8l-.4-1.6c.9-.4 2.4-1 4-1 2 0 4.1.8 4.1 3.7v5.1c0 .7.3 1 .8 1.2l-.4 1.9zm-5.9-4.6c-2.3 0-3.8.5-3.8 1.8 0 .9.6 1.3 1.5 1.3 1 0 1.9-.6 2.3-1.5v-1.6zM4.6 18.7c4.6 3.4 10.9 2.7 14-1.4l-.7-.5c-2.7 3.5-8.2 4-12.2.8l-1.1 1.1z'/%3E%3C/svg%3E") no-repeat center/contain; }
+
+    /* ===== NO RESULT ===== */
+    .no-result {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-sub);
+      display: none;
+    }
+    .no-result-icon { font-size: 48px; margin-bottom: 12px; }
+    .no-result h3 { font-size: 16px; margin-bottom: 6px; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #1a1a2e;
+      color: rgba(255,255,255,0.65);
+      padding: 24px 16px;
+      text-align: center;
+      font-size: 12px;
+    }
+    footer a { color: rgba(255,255,255,0.75); text-decoration: none; margin: 0 8px; }
+    footer a:hover { color: white; }
+    .footer-links { margin-bottom: 10px; }
+    .footer-note { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px; line-height: 1.6; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 20px; }
+      .hero-stats { gap: 16px; }
+      .stat-num { font-size: 18px; }
+      .header-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">🔍</span>
+      <div>
+        <div>おもちゃサーチ</div>
+        <div class="logo-sub">探して・比べて・すぐ買える</div>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a href="#">ナーフ</a>
+      <a href="#">ベイブレード</a>
+      <a href="#">たまごっち</a>
+      <a href="#">このサイトについて</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">🆕 2026年最新シリーズ対応</div>
+  <h1>欲しいおもちゃが<span>すぐ見つかる</span><br>まとめサイト</h1>
+  <p>シリーズ・価格帯・難易度・重量でかんたん絞り込み。気に入ったらそのままAmazonで購入できます。</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">50+</div><div class="stat-label">掲載商品数</div></div>
+    <div class="stat"><div class="stat-num">9</div><div class="stat-label">シリーズ対応</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">フィルター項目</div></div>
+  </div>
+</section>
+
+<!-- CATEGORY TABS -->
+<div class="category-bar">
+  <div class="category-tabs">
+    <div class="cat-tab active" onclick="setCategory(this,'nerf')">🔫 ナーフ（NERF）</div>
+    <div class="cat-tab" onclick="setCategory(this,'beyblade')">🌀 ベイブレードX</div>
+    <div class="cat-tab" onclick="setCategory(this,'tamagotchi')">🥚 たまごっち</div>
+    <div class="cat-tab" onclick="setCategory(this,'all')">📦 すべて</div>
+  </div>
+</div>
+
+<!-- FILTER PANEL -->
+<section class="filter-section">
+  <div class="filter-inner">
+    <div class="filter-row">
+      <span class="filter-label">シリーズ</span>
+      <div class="filter-chips" id="filter-series">
+        <button class="chip active" data-filter="series" data-value="all" onclick="toggleChip(this,'series')">すべて</button>
+        <button class="chip" data-filter="series" data-value="n-series" onclick="toggleChip(this,'series')">🆕 Nシリーズ</button>
+        <button class="chip" data-filter="series" data-value="loadout" onclick="toggleChip(this,'series')">LOADOUT</button>
+        <button class="chip" data-filter="series" data-value="elite2" onclick="toggleChip(this,'series')">Elite 2.0</button>
+        <button class="chip" data-filter="series" data-value="mega" onclick="toggleChip(this,'series')">MEGA</button>
+        <button class="chip" data-filter="series" data-value="ultra" onclick="toggleChip(this,'series')">ULTRA</button>
+        <button class="chip" data-filter="series" data-value="rival" onclick="toggleChip(this,'series')">Rival</button>
+        <button class="chip" data-filter="series" data-value="collab" onclick="toggleChip(this,'series')">コラボ</button>
+        <button class="chip" data-filter="series" data-value="accessory" onclick="toggleChip(this,'series')">🎯 アクセサリー</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">価格帯</span>
+      <div class="filter-chips" id="filter-price">
+        <button class="chip active" data-filter="price" data-value="all" onclick="toggleChip(this,'price')">すべて</button>
+        <button class="chip" data-filter="price" data-value="low" onclick="toggleChip(this,'price')">〜3,000円</button>
+        <button class="chip" data-filter="price" data-value="mid" onclick="toggleChip(this,'price')">3,000〜6,000円</button>
+        <button class="chip" data-filter="price" data-value="high" onclick="toggleChip(this,'price')">6,000〜10,000円</button>
+        <button class="chip" data-filter="price" data-value="premium" onclick="toggleChip(this,'price')">10,000円〜</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">難易度</span>
+      <div class="filter-chips" id="filter-level">
+        <button class="chip active" data-filter="level" data-value="all" onclick="toggleChip(this,'level')">すべて</button>
+        <button class="chip" data-filter="level" data-value="beginner" onclick="toggleChip(this,'level')">初心者向け</button>
+        <button class="chip" data-filter="level" data-value="mid" onclick="toggleChip(this,'level')">中級者</button>
+        <button class="chip" data-filter="level" data-value="advanced" onclick="toggleChip(this,'level')">上級者</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">重量</span>
+      <div class="filter-chips" id="filter-weight">
+        <button class="chip active" data-filter="weight" data-value="all" onclick="toggleChip(this,'weight')">すべて</button>
+        <button class="chip" data-filter="weight" data-value="light" onclick="toggleChip(this,'weight')">軽量（〜500g）</button>
+        <button class="chip" data-filter="weight" data-value="medium" onclick="toggleChip(this,'weight')">中型（500g〜1kg）</button>
+        <button class="chip" data-filter="weight" data-value="heavy" onclick="toggleChip(this,'weight')">大型（1kg〜）</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">発射方式</span>
+      <div class="filter-chips" id="filter-power">
+        <button class="chip active" data-filter="power" data-value="all" onclick="toggleChip(this,'power')">すべて</button>
+        <button class="chip" data-filter="power" data-value="manual" onclick="toggleChip(this,'power')">⚙️ 手動（スプリング）</button>
+        <button class="chip" data-filter="power" data-value="electric" onclick="toggleChip(this,'power')">⚡ 電動（モーター）</button>
+      </div>
+      <button class="filter-reset" onclick="resetFilters()">✕ リセット</button>
+    </div>
+  </div>
+</section>
+
+<!-- RESULT COUNT -->
+<div class="result-bar">
+  <div class="result-count"><strong id="result-num">16</strong> 件表示中</div>
+</div>
+
+<!-- PRODUCT GRID -->
+<section class="grid-section">
+  <div class="product-grid" id="product-grid">
+
+    <!-- 商品カード 1 -->
+    <div class="card"
+      data-series="n-series" data-price="mid" data-level="beginner" data-weight="light" data-power="manual" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-new">NEW</span>
+          <span class="badge badge-series">Nシリーズ</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ Nアジリティ（N-Agility）</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約27m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">N1ダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">手動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約350g（軽量）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-beginner">初心者おすすめ</span>
+          <span class="tag">6連発</span>
+          <span class="tag">コンパクト</span>
+        </div>
+        <div class="card-price">¥3,500前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+Nアジリティ&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 2 -->
+    <div class="card"
+      data-series="n-series" data-price="mid" data-level="mid" data-weight="medium" data-power="manual" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-new">NEW</span>
+          <span class="badge badge-series">Nシリーズ</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ Nピンポイント（N-Pinpoint）</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約27m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">N1ダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">手動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約500g（中型）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-mid">中級者向け</span>
+          <span class="tag">精度重視</span>
+          <span class="tag">スコープ付</span>
+        </div>
+        <div class="card-price">¥4,800前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+Nピンポイント&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 3 -->
+    <div class="card"
+      data-series="elite2" data-price="low" data-level="beginner" data-weight="light" data-power="manual" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-series">Elite 2.0</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ エリート2.0 コマンダー RD-6</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約20m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">エリートダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">手動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約250g（軽量）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-beginner">初心者おすすめ</span>
+          <span class="tag">6連発</span>
+          <span class="tag">定番</span>
+        </div>
+        <div class="card-price">¥2,800前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+エリート2.0+コマンダー&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 4 -->
+    <div class="card"
+      data-series="elite2" data-price="mid" data-level="mid" data-weight="medium" data-power="manual" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-series">Elite 2.0</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ エリート2.0 エコー CS-10</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約20m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">エリートダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">手動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約700g（中型）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-mid">中級者向け</span>
+          <span class="tag">10連発</span>
+          <span class="tag">拡張レール付</span>
+        </div>
+        <div class="card-price">¥5,200前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+エリート2.0+エコーCS-10&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 5 -->
+    <div class="card"
+      data-series="elite2" data-price="premium" data-level="mid" data-weight="heavy" data-power="electric" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-series">Elite 2.0</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ エリート2.0 ネメシス MXVII-10K</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約20m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">エリートダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">電動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約1.5kg（大型）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-mid">中級者向け</span>
+          <span class="tag">100連タンク</span>
+          <span class="tag">電動フルオート</span>
+        </div>
+        <div class="card-price">¥9,800前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+ネメシス&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 6 -->
+    <div class="card"
+      data-series="mega" data-price="mid" data-level="beginner" data-weight="medium" data-power="manual" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-series">MEGA XL</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ MEGA XL ボルスター</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約20m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">MEGA XLダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">手動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約600g（中型）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-beginner">初心者OK</span>
+          <span class="tag">大型弾</span>
+          <span class="tag">迫力音</span>
+        </div>
+        <div class="card-price">¥4,200前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+MEGAXLボルスター&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 7 -->
+    <div class="card"
+      data-series="ultra" data-price="high" data-level="mid" data-weight="medium" data-power="electric" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-series">ULTRA</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ ウルトラ ワン</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約35m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">専用ULTRAダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">電動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約800g（中型）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-mid">中級者向け</span>
+          <span class="tag">最長飛距離</span>
+          <span class="tag">屋外向け</span>
+        </div>
+        <div class="card-price">¥7,500前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+ウルトラワン&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 8 -->
+    <div class="card"
+      data-series="rival" data-price="high" data-level="advanced" data-weight="heavy" data-power="electric" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-series">Rival</span>
+          <span class="badge badge-age">14歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ ライバル ネメシス MXVII-10K</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約30m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">H.I.R.ボール弾</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">電動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約1.2kg（大型）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-advanced">上級者向け</span>
+          <span class="tag">高速連射</span>
+          <span class="tag">サバゲー向け</span>
+        </div>
+        <div class="card-price">¥8,800前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+ライバル+ネメシス&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 9 -->
+    <div class="card"
+      data-series="collab" data-price="mid" data-level="beginner" data-weight="light" data-power="manual" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-series">Minecraft</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ マインクラフト ストーム ランダー</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約20m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">エリートダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">手動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約400g（軽量）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-beginner">子ども向け</span>
+          <span class="tag">ゲームコラボ</span>
+          <span class="tag">ギフト人気</span>
+        </div>
+        <div class="card-price">¥4,500前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+マインクラフト&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 10 -->
+    <div class="card"
+      data-series="collab" data-price="mid" data-level="mid" data-weight="medium" data-power="manual" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-series">Fortnite</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ フォートナイト TS-R</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約20m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">エリートダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">手動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約550g（中型）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-mid">中級者向け</span>
+          <span class="tag">ゲームコラボ</span>
+          <span class="tag">見た目重視</span>
+        </div>
+        <div class="card-price">¥5,500前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+フォートナイトTS-R&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 11 -->
+    <div class="card"
+      data-series="loadout" data-price="mid" data-level="mid" data-weight="medium" data-power="manual" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-new">NEW</span>
+          <span class="badge badge-series">LOADOUT</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ LOADOUT ファントム ブリッツ リコン</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約27m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">N1ダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">手動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約600g（中型）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-mid">中級者向け</span>
+          <span class="tag">新規格N1</span>
+          <span class="tag">タクティカル</span>
+        </div>
+        <div class="card-price">¥5,800前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+LOADOUT&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 12 -->
+    <div class="card"
+      data-series="elite2" data-price="low" data-level="beginner" data-weight="light" data-power="manual" data-category="nerf">
+      <div class="card-img">
+        🔫
+        <div class="card-badges">
+          <span class="badge badge-series">Elite 2.0</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ エリート2.0 ボルト SD-1</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">約20m</span></span>
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">エリートダーツ</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">⚙️</span><span class="spec-val">手動</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">約200g（軽量）</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-beginner">初心者最適</span>
+          <span class="tag">単発</span>
+          <span class="tag">最安値帯</span>
+        </div>
+        <div class="card-price">¥1,800前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+エリート2.0+ボルトSD-1&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+
+    <!-- 商品カード 13：交換ダーツ（消耗品） -->
+    <div class="card"
+      data-series="accessory" data-price="low" data-level="beginner" data-weight="light" data-power="manual" data-category="nerf">
+      <div class="card-img" style="background:#e8f5e9;">
+        🎯
+        <div class="card-badges">
+          <span class="badge" style="background:#f57c00;color:white;">消耗品</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ エリートダーツ 補充用 100本パック</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">エリートダーツ対応</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">📦</span><span class="spec-val">100本入り</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">軽量</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag" style="background:#e8f5e9;color:#2e7d32;">リピート購入</span>
+          <span class="tag">補充用</span>
+          <span class="tag">Elite・Elite2.0対応</span>
+        </div>
+        <div class="card-price">¥1,500前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+エリートダーツ+100本&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 14：MEGAダーツ（消耗品） -->
+    <div class="card"
+      data-series="accessory" data-price="low" data-level="beginner" data-weight="light" data-power="manual" data-category="nerf">
+      <div class="card-img" style="background:#fff3e0;">
+        🎯
+        <div class="card-badges">
+          <span class="badge" style="background:#f57c00;color:white;">消耗品</span>
+          <span class="badge badge-age">8歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ MEGAダーツ 補充用 20本パック</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">MEGAシリーズ対応</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">📦</span><span class="spec-val">20本入り</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">軽量</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag" style="background:#fff3e0;color:#e65100;">MEGAシリーズ専用</span>
+          <span class="tag">補充用</span>
+        </div>
+        <div class="card-price">¥1,200前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+MEGAダーツ+補充&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 15：N1ダーツ（消耗品・新規格） -->
+    <div class="card"
+      data-series="accessory" data-price="low" data-level="beginner" data-weight="light" data-power="manual" data-category="nerf">
+      <div class="card-img" style="background:#e3f2fd;">
+        🎯
+        <div class="card-badges">
+          <span class="badge badge-new">NEW</span>
+          <span class="badge" style="background:#f57c00;color:white;">消耗品</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ N1ダーツ 補充用 40本パック</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">🎯</span><span class="spec-val">Nシリーズ・LOADOUT対応</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">📦</span><span class="spec-val">40本入り</span></span>
+            <span class="spec"><span class="spec-icon">⚡</span><span class="spec-val">高精度新規格</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag" style="background:#e3f2fd;color:#1565c0;">新N1規格</span>
+          <span class="tag">Nシリーズ必須</span>
+          <span class="tag">高命中率</span>
+        </div>
+        <div class="card-price">¥1,800前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+N1ダーツ+補充&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+    <!-- 商品カード 16：ターゲット（的） -->
+    <div class="card"
+      data-series="accessory" data-price="mid" data-level="beginner" data-weight="medium" data-power="manual" data-category="nerf">
+      <div class="card-img" style="background:#fce4ec;">
+        🎪
+        <div class="card-badges">
+          <span class="badge" style="background:#7b1fa2;color:white;">ターゲット</span>
+          <span class="badge badge-age">6歳〜</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">ナーフ ターゲット ファイアビジョン スポーツ</div>
+        <div class="card-specs">
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">🎪</span><span class="spec-val">的 3ターゲット</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec"><span class="spec-icon">📦</span><span class="spec-val">折りたたみ可能</span></span>
+            <span class="spec"><span class="spec-icon">⚖️</span><span class="spec-val">中型</span></span>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag" style="background:#fce4ec;color:#880e4f;">的当て練習</span>
+          <span class="tag">屋内外対応</span>
+          <span class="tag">全ダーツ対応</span>
+        </div>
+        <div class="card-price">¥3,500前後 <span>（参考価格）</span></div>
+        <a class="btn-amazon" href="https://www.amazon.co.jp/s?k=ナーフ+ターゲット&tag=YOUR_TAG-22" target="_blank" rel="nofollow sponsored">Amazonで見る</a>
+      </div>
+    </div>
+
+  </div><!-- /product-grid -->
+
+  <!-- NO RESULT -->
+  <div class="no-result" id="no-result">
+    <div class="no-result-icon">🔍</div>
+    <h3>条件に合う商品が見つかりませんでした</h3>
+    <p style="font-size:13px;color:#888;margin-top:6px;">フィルターをリセットして再度お試しください</p>
+    <button onclick="resetFilters()" style="margin-top:14px;padding:8px 20px;background:var(--primary);color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;">リセットする</button>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="#">このサイトについて</a>
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">お問い合わせ</a>
+  </div>
+  <div>© 2026 おもちゃサーチ</div>
+  <div class="footer-note">
+    当サイトはAmazonアソシエイト・プログラムの参加者です。<br>
+    掲載の価格・在庫状況は参考値です。最新情報はAmazonの商品ページをご確認ください。
+  </div>
+</footer>
+
+<script>
+  // フィルター状態
+  const filters = { series: 'all', price: 'all', level: 'all', weight: 'all', power: 'all' };
+
+  function toggleChip(el, filterKey) {
+    // 同グループのチップをリセット
+    document.querySelectorAll(`[data-filter="${filterKey}"]`).forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    filters[filterKey] = el.dataset.value;
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const cards = document.querySelectorAll('.card');
+    let visible = 0;
+    cards.forEach(card => {
+      const match =
+        (filters.series === 'all' || card.dataset.series === filters.series) &&
+        (filters.price  === 'all' || card.dataset.price  === filters.price)  &&
+        (filters.level  === 'all' || card.dataset.level  === filters.level)  &&
+        (filters.weight === 'all' || card.dataset.weight === filters.weight) &&
+        (filters.power  === 'all' || card.dataset.power  === filters.power);
+      card.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+    document.getElementById('result-num').textContent = visible;
+    document.getElementById('no-result').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  function resetFilters() {
+    ['series','price','level','weight','power'].forEach(key => {
+      filters[key] = 'all';
+      document.querySelectorAll(`[data-filter="${key}"]`).forEach(c => {
+        c.classList.toggle('active', c.dataset.value === 'all');
+      });
+    });
+    applyFilters();
+  }
+
+  function setCategory(el, cat) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    // カテゴリタブは将来のページ切り替えに使用（現在はナーフのみ）
+  }
+</script>
+</body>
+</html>
